@@ -43,6 +43,7 @@
             src = craneLib.cleanCargoSource (craneLib.path ./.);
             strictDeps = true;
             buildInputs = (with pkgs; [
+              just
             ]) ++ pkgs.lib.optionals pkgs.stdenv.isLinux (with pkgs; [
               openssl
             ]) ++ pkgs.lib.optionals pkgs.stdenv.isDarwin (with pkgs; [
@@ -61,6 +62,7 @@
         default = pkgs.mkShell {
           packages = (with pkgs; [
 	    git
+	    just
             rustToolchain
           ]) ++ pkgs.lib.optionals pkgs.stdenv.isLinux (with pkgs; [
             openssl
