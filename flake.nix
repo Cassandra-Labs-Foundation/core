@@ -61,6 +61,7 @@
         default = pkgs.mkShell {
           packages = (with pkgs; [
 	    git
+	    just
             rustToolchain
           ]) ++ pkgs.lib.optionals pkgs.stdenv.isLinux (with pkgs; [
             openssl
