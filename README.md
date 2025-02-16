@@ -1,94 +1,122 @@
-# Banking Core Mock Server
+# Banking Core Mock Server Blueprint
 
-An open-source mock server for our banking core, built on top of [TigerBeetle](https://docs.tigerbeetle.com/operating/docker/) and designed for fintech startups. This project provides a sandbox environment to simulate banking operations like account management, transfers, and KYC for testing integrations.
+This blueprint outlines our approach to building a robust, open‐source banking core mock server that leverages TigerBeetle as a high-performance ledger. Our design incorporates insights from three leading BaaS platforms—Column, Increase, and Lead-bank—to ensure clarity, compliance, and operational flexibility.
 
-## Overview
+---
 
-The goal of this project is to provide a robust, open-source banking core that:
-- Leverages TigerBeetle as the high-performance ledger.
-- Exposes a REST (or GraphQL) API for fintech partners.
-- Supports modules for authentication, entity onboarding, account management, loans, transfers, and more.
-- Can eventually be deployed to GCP after local development and testing.
+## Architecture Overview
+
+### System Components
+- **TigerBeetle Ledger:**  
+  A high-performance, fault-tolerant ledger that manages accounts, transfers, loans, and compliance data.
+  
+- **Banking Core API Layer:**  
+  A REST (or GraphQL) API exposing endpoints for all key banking operations.
+  
+- **Integration Service Layer:**  
+  Translates API requests into corresponding TigerBeetle operations and ensures data consistency.
+  
+- **Compliance & Risk Modules:**  
+  Integrates robust KYC/AML measures, fraud detection, and audit logging.
+  
+- **Administrative & Internal Tools:**  
+  Provides endpoints for internal dispute resolution, manual reviews, and reconciliation.
+
+### Deployment Strategy
+- **Local Development:**  
+  Develop and iterate the core using TigerBeetle running as a native binary.
+  
+- **Cloud Deployment (Future):**  
+  Containerize the application and deploy on GCP (using Compute Engine or GKE) once the core functionality is stable.
+
+---
 
 ## Roadmap / To-Do List
 
-We use this README as a living to-do list to help guide development and encourage community contributions:
+We use this README as a living document to track progress and invite contributions.
 
-- [ ] **Authentication Module**
-  - [ ] Decide between OAuth 2.0 or API key-based auth.
+- **Authentication Module**
+  - [ ] Decide between OAuth 2.0 vs. Bearer key-based authentication.
   - [ ] Implement authentication middleware.
-  - [ ] Create endpoints for token issuance and validation.
-  - [ ] Write unit and integration tests for auth workflows.
+  - [ ] Create endpoints for token issuance, validation, and refresh.
 
-- [ ] **Entity Onboarding & KYC**
-  - [ ] Design API endpoints for person and business entities.
-  - [ ] Integrate KYC fields and document upload flows.
-  - [ ] Develop validation and verification mechanisms.
-  - [ ] Write tests for onboarding scenarios.
+- **Entity Onboarding & KYC**
+  - [ ] Design dedicated endpoints for:
+    - [ ] Person (`POST /entities/person`, `PATCH /entities/person`)
+    - [ ] Business (`POST /entities/business`, `PATCH /entities/business`)
+  - [ ] Integrate detailed KYC fields (SSN, DOB, address) and support document uploads.
+  - [ ] Implement validation and verification workflows.
 
-- [ ] **Account Management**
-  - [ ] Build CRUD endpoints for bank accounts.
-  - [ ] Separate account metadata from account numbers if needed.
+- **Account Management**
+  - [ ] Build CRUD endpoints for bank accounts:
+    - [ ] `POST /bank-accounts`
+    - [ ] `GET /bank-accounts`
+    - [ ] `GET /bank-accounts/{id}`
+    - [ ] `PUT/PATCH /bank-accounts/{id}`
+    - [ ] `DELETE /bank-accounts/{id}`
+  - [ ] Consider design for handling multiple account numbers/routing if required.
   - [ ] Integrate with TigerBeetle’s account operations.
-  - [ ] Document the API and add test cases.
+  - [ ] Document the API.
 
-- [ ] **Loan Processing**
-  - [ ] Create endpoints for loan creation, disbursement, and payment.
-  - [ ] Implement business rules (interest, term, collateral, etc.).
-  - [ ] Ensure robust error handling and transaction logging.
+- **Loan Processing**
+  - [ ] Create endpoints for loan lifecycle operations:
+    - [ ] `POST /loans`
+    - [ ] `GET /loans/{id}`
+    - [ ] `PATCH /loans/{id}`
+  - [ ] Include parameters for interest rate, term, collateral, etc.
+  - [ ] Ensure robust error handling and logging.
 
-- [ ] **Transfers Module**
-  - [ ] Develop endpoints for ACH, wire, and realtime transfers.
-  - [ ] Create multi-step approval workflows for high-value transactions.
-  - [ ] Implement cancellation and reversal logic.
-  - [ ] Test edge cases such as partial failures and timeouts.
+- **Transfers Module**
+  - [ ] Develop endpoints for ACH transfers:
+    - [ ] Initiate ACH transfer
+    - [ ] Cancellation endpoint
+    - [ ] Reversal endpoint
+  - [ ] Develop endpoints for wire transfers:
+    - [ ] Initiate wire transfer
+    - [ ] Reversal endpoint
+  - [ ] Develop endpoints for realtime transfers:
+    - [ ] Initiate realtime transfer
+    - [ ] Return endpoint
+  - [ ] Implement multi-step approval for high-value transactions.
+  - [ ] Address edge cases such as partial failures and timeouts.
 
-- [ ] **Documents & Reporting**
-  - [ ] Provide endpoints for document uploads and secure retrieval.
-  - [ ] Build reporting endpoints for compliance and reconciliation.
-  - [ ] Generate scheduled and on-demand reports.
+- **Documents & Reporting**
+  - [ ] Provide secure document upload and retrieval:
+    - [ ] `POST /documents/upload`
+    - [ ] `GET /documents/{id}`
+  - [ ] Create endpoints for generating and scheduling reports.
 
-- [ ] **Webhooks & Event Logging**
-  - [ ] Enable webhook subscriptions for key events (e.g., transaction completed, account created).
-  - [ ] Create a robust audit log accessible via an API endpoint.
-  - [ ] Document event types and webhook payload formats.
+- **Webhooks & Event Logging**
+  - [ ] Enable webhook subscription endpoints:
+    - [ ] `POST /webhook_endpoints` (and related update/delete endpoints)
+  - [ ] Create an audit log endpoint:
+    - [ ] `GET /events`
+  - [ ] Document payload formats and events.
 
-- [ ] **Sandbox & Simulation**
-  - [ ] Develop a sandbox mode that mimics production behavior.
-  - [ ] Provide test credentials and simulation scenarios for partners.
-  - [ ] Implement logging and debugging support in the sandbox.
+- **Sandbox & Simulation**
+  - [ ] Develop a sandbox mode with test credentials and simulated endpoints.
+  - [ ] Provide simulation of edge cases:
+    - [ ] Large transactions
+    - [ ] Timeouts
+    - [ ] Partial failures
+  - [ ] Implement debugging support.
 
-- [ ] **Deployment & Scalability**
-  - [ ] Containerize the application for consistent deployments.
-  - [ ] Prepare deployment scripts for GCP (Compute Engine / GKE).
-  - [ ] Set up CI/CD pipelines for automated testing and deployment.
-  - [ ] Monitor performance and scalability metrics.
+- **Counterparty Management**
+  - [ ] Build endpoints for managing counterparties:
+    - [ ] `POST /counterparties`
+    - [ ] `GET /counterparties`
+    - [ ] `DELETE /counterparties/{id}`
+  - [ ] Optionally implement IBAN validation:
+    - [ ] `POST /validate-iban`
 
-- [ ] **Miscellaneous**
-  - [ ] Create comprehensive documentation (INSTALL.md, CONTRIBUTING.md).
-  - [ ] Establish coding standards and set up code quality tools.
-  - [ ] Engage with the community via GitHub Issues and discussions.
+- **Compliance & Risk Modules**
+  - [ ] Integrate robust compliance data with enhanced KYC fields.
+  - [ ] Consider additional fraud detection integrations.
+  - [ ] Ensure audit trails for KYC data changes.
 
-## Contributing
-
-We welcome contributions from everyone! To contribute:
-1. **Fork the Repository** and clone it locally.
-2. Create a branch for your feature or fix.
-3. Make your changes and add tests.
-4. Submit a pull request with a clear description of your changes.
-5. Check out our [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
-
-## Getting Started Locally
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/your-org/banking-core-mock-server.git
-   cd banking-core-mock-server ```
-
-2. **Set up TigerBeetle locally:**
-Ensure you have TigerBeetle running as described in [their Installation Guide](https://docs.tigerbeetle.com/quick-start/). For local development, you can run it directly as a binary:
-bash
-```chmod +x ./tigerbeetle
-mkdir -p data
-./tigerbeetle format --cluster=0 --replica=0 --replica-count=1 ./data/0_0.tigerbeetle
-./tigerbeetle start --addresses=0.0.0.0:3000 ./data/0_0.tigerbeetle```
+- **Administrative & Internal Tools**
+  - [ ] Develop admin endpoints for:
+    - [ ] Dispute resolution
+    - [ ] Manual reviews
+    - [ ] Reconciliation
+  - [ ] Implement role-based access for internal tools.
