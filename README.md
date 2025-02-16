@@ -4,33 +4,6 @@ This blueprint outlines our approach to building a robust, open‐source banking
 
 ---
 
-## Architecture Overview
-
-### System Components
-- **TigerBeetle Ledger:**  
-  A high-performance, fault-tolerant ledger that manages accounts, transfers, loans, and compliance data.
-  
-- **Banking Core API Layer:**  
-  A REST (or GraphQL) API exposing endpoints for all key banking operations.
-  
-- **Integration Service Layer:**  
-  Translates API requests into corresponding TigerBeetle operations and ensures data consistency.
-  
-- **Compliance & Risk Modules:**  
-  Integrates robust KYC/AML measures, fraud detection, and audit logging.
-  
-- **Administrative & Internal Tools:**  
-  Provides endpoints for internal dispute resolution, manual reviews, and reconciliation.
-
-### Deployment Strategy
-- **Local Development:**  
-  Develop and iterate the core using TigerBeetle running as a native binary.
-  
-- **Cloud Deployment (Future):**  
-  Containerize the application and deploy on GCP (using Compute Engine or GKE) once the core functionality is stable.
-
----
-
 ## Roadmap / To-Do List
 
 We use this README as a living document to track progress and invite contributions.
