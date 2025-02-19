@@ -1,3 +1,11 @@
+## Feb 19th 2025
+
+o3-mini says the first step is to actually build the authentication module, so I setup server.js
+    - idk how I feel about using Node for this
+    - yea, dropping Node to use Rust so that @Jacob would be proud
+
+I might be regretting this Rust thing. I still haven't been able to run the server because the dependencies don't compile...
+
 ## Feb 16th 2025
 
 Ok we are going to set up a TigerBeetle mock 
