@@ -1,3 +1,18 @@
+## Feb 25th 2025
+
+After some review, I'm dropping Rust in favor of Go at this stage
+    - Rust is essentially [a better version of C++](https://www.youtube.com/watch?v=5C_HPTJg5ek), where the focus is on checking for issues at compile time as opposed to runtime
+    - Rust has a [notoriously steep learning curve](https://www.youtube.com/watch?v=2hXNd6x9sZs), which by itself isn't a problem, but at the current stage it would definitely slow us down 
+    - Most of the benefits of memory efficiency would only make sense at large scales, but we are not operating a large scale system with lots of parallelization 
+
+Next, given that TigerBeetle takes care of the reliability of the ledger, development speed is the second major factor in this decision
+    - TigerBeetle does NOT have a Rust client, but it does have [Go, Node, and Python clients](https://github.com/tigerbeetle/tigerbeetle/blob/main/src/clients/README.md)
+    - As much as I'd love to use JavaScript for this as well, it makes sense to use Go and o3-mini agrees 
+    - Using these languages also gives us a boost with LLMs because they are better trained on older programming language than Rust which is so new 
+
+Overall, we are not dropping Rust forever, but it doesn't make sense to pay such high development costs for memory management when it's less impactful
+    - It makes more sense to iterate in Go and once we have stabilized the MVP we can re-write it in Rust if we want to 
+
 ## Feb 19th 2025
 
 o3-mini says the first step is to actually build the authentication module, so I setup server.js
