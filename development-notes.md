@@ -10,8 +10,21 @@ Next, given that TigerBeetle takes care of the reliability of the ledger, develo
     - As much as I'd love to use JavaScript for this as well, it makes sense to use Go and o3-mini agrees 
     - Using these languages also gives us a boost with LLMs because they are better trained on older programming language than Rust which is so new 
 
-Overall, we are not dropping Rust forever, but it doesn't make sense to pay such high development costs for memory management when it's less impactful
+Overall, we are not dropping Rust forever, but it doesn't make sense to pay such high development costs for memory management when it's less impactfulgo mod init
     - It makes more sense to iterate in Go and once we have stabilized the MVP we can re-write it in Rust if we want to 
+
+Ok now, I've integrated Claude with our Repo so that we can start implementing Go
+    - just like GPT, it suggests with starting off with auth, which is painful, but ok 
+    - Go code is organized into packages. Each directory represents a package, and files in the same directory are part of the same package.
+    - In the Gin framework, middleware is a function that processes requests before they reach the handlers. We created an authentication middleware that validates JWT tokens.
+
+Here is the current structure
+    - pkg/jwt: Reusable JWT package (could be used in other projects)
+    - internal/config: Configuration management
+    - internal/service/auth: Authentication business logic
+    - internal/api/auth: HTTP handlers for authentication
+    - internal/api/middleware: HTTP middleware for authentication
+    - cmd/server: Application entry point
 
 ## Feb 19th 2025
 
