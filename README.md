@@ -11,7 +11,7 @@ We use this README as a living document to track progress and invite contributio
 - **Authentication Module**
   - [x] Decide between OAuth 2.0 vs. Bearer key-based authentication.
   - [x] Implement authentication middleware.
-  - [x] Create endpoints for token issuance, validation, and refresh.
+  - [ ] Create endpoints for token issuance, validation, and refresh.
 
 - **Entity Onboarding & KYC**
   - [ ] Design dedicated endpoints for:

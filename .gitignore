@@ -11,3 +11,4 @@ target/
 *.pem
 *tigerbeetle
 tigerbeetle.zip
+.env

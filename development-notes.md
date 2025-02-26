@@ -50,6 +50,7 @@
             - Use TigerBeetle for all financial transactions and balance tracking
 
 
+
 ## Feb 19th 2025
 
 - o3-mini says the first step is to actually build the authentication module, so I setup server.js
