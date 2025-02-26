@@ -49,6 +49,8 @@
             - Link accounts in TigerBeetle to entities in Supabase via IDs
             - Use TigerBeetle for all financial transactions and balance tracking
 
+- Ok we are trying to start by setting up Persons entities on Supabase
+    - Gotta check the .env file when you get back from the break (Claude is frozen)
 
 
 ## Feb 19th 2025
