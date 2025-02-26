@@ -9,9 +9,9 @@ This blueprint outlines our approach to building a robust, open‐source banking
 We use this README as a living document to track progress and invite contributions.
 
 - **Authentication Module**
-  - [ ] Decide between OAuth 2.0 vs. Bearer key-based authentication.
-  - [ ] Implement authentication middleware.
-  - [ ] Create endpoints for token issuance, validation, and refresh.
+  - [x] Decide between OAuth 2.0 vs. Bearer key-based authentication.
+  - [x] Implement authentication middleware.
+  - [x] Create endpoints for token issuance, validation, and refresh.
 
 - **Entity Onboarding & KYC**
   - [ ] Design dedicated endpoints for:

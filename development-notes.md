@@ -26,6 +26,30 @@ Here is the current structure
     - internal/api/middleware: HTTP middleware for authentication
     - cmd/server: Application entry point
 
+The authentication module now provides these endpoints:
+    - `POST /api/v1/auth/login` - For user login and token generation
+    - `POST /api/v1/auth/refresh` - For refreshing expired tokens
+    - `GET /api/v1/auth/validate` - For validating tokens (protected endpoint)
+
+Turns out, TigerBeetle is not a general-purpose database and has intentional limitations:
+    - Limited data model - TigerBeetle only supports Accounts (for storing balances) and Transfers (for moving money between accounts)
+    - No support for complex queries - It doesn't have SQL-like query capabilities or support for complex joins, filtering, etc.
+    - No document storage - There's no way to store unstructured data like KYC documents, images, etc.
+    - Limited field types - TigerBeetle has a fixed schema with specific field types for its account and transfer objects.
+
+The standard approach is to use TigerBeetle for what it excels at (the financial ledger) and pair it with a more flexible database like PostgreSQL for everything else. This is the architecture recommended by TigerBeetle's own documentation (apparently).
+    - What if we use Supabase? According to Clause "This gives us the best of both worlds: A modern, developer-friendly PostgreSQL solution with Supabase. The high-performance, reliable financial ledger with TigerBeetle"
+    - The strategy has two tiers
+        1. Entity Management using Supabase
+            - Store entity data (people, businesses, KYC info) in Supabase PostgreSQL tables
+            - Use Supabase Storage for document uploads and retrieval
+            - Leverage Supabase Auth for authentication if desired
+        2. Financial Ledger using TigerBeetle
+            - Keep TigerBeetle for the core accounting functions
+            - Link accounts in TigerBeetle to entities in Supabase via IDs
+            - Use TigerBeetle for all financial transactions and balance tracking
+
+
 ## Feb 19th 2025
 
 o3-mini says the first step is to actually build the authentication module, so I setup server.js
