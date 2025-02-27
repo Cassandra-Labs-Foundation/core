@@ -1,3 +1,14 @@
+## Feb 26th 2025
+
+- the focus is on Supabase, let's get it working
+
+- ok so I added the Supabase logic and wrote a test that authenaticates and uses the auth-key to create a person Entity
+    - this test is currently failing for reasons to be determined
+    - it might be related to the .env file not being loaded properly 
+
+- noooo, Claude3.7 is done until 9pm...
+    - I need to figure out a way to easily transition between models so I stop being bottlenecked like this 
+
 ## Feb 25th 2025
 
 - After some review, I'm dropping Rust in favor of Go at this stage
