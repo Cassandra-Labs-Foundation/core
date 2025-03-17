@@ -1,3 +1,28 @@
+## Mar 17th 2025
+
+- ok let's do this
+    - the first step is to break this down further
+        - ok done, it's now all time-boxed in my calendar
+
+- next step is to figure out where exactly I left off
+    - in a way, this is an opportunity to start over
+        - I'm not going to use SuperGrok just yet, but I will transitioning into explaining the project to GPT
+    - the next step here is to fit the documentation into o3
+    - I used Repomix on the current state of the repo to have o3 understand where we left off
+        - You’ve already decided on a Bearer key–based approach and implemented the authentication middleware.
+        - The endpoints for token issuance (/auth/login), token refresh (/auth/refresh), and validation (/auth/validate) are all in place and are being exercised by your test script.
+        - The endpoints for the Person entity (POST /entities/person, GET /entities/person, PATCH /entities/person, and list functionality) have been implemented.
+        - The Business endpoints and additional KYC details (like comprehensive KYC fields and document uploads) are still pending.
+        - In cmd/server/main.go, you've added logic to create a Supabase client using configuration values.
+        - You've set up a person repository (using the Supabase REST API) and integrated the corresponding service and HTTP handler.
+        - New routes for person entities have been added under the /entities/person endpoint (supporting POST, GET, GET by ID, and PATCH). This indicates that the Entity Onboarding piece for the Person entity is now functional, albeit likely with basic fields and behavior.
+        - The configuration file (internal/config/config.go) was updated to include Database and Supabase settings, ensuring that your application now pulls these values from environment variables. This lays the groundwork for both the Person onboarding and future features that may require database access.
+
+- all the action is happening `internal/repository/person.go` 
+    - `./auth-and-person.sh` runs the test 
+    - most thigns seem to be working, except for the updating the person entity with KYC status
+        - the key turned out to be making the type on Supabase not just a Timestamp but also a Timezone
+
 ## Feb 26th 2025
 
 - the focus is on Supabase, let's get it working

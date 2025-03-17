@@ -1,0 +1,169 @@
+diff --git a/cmd/server/main.go b/cmd/server/main.go
+index ebdd99d..37958bc 100644
+--- a/cmd/server/main.go
++++ b/cmd/server/main.go
+@@ -6,14 +6,22 @@ import (
+ 	"github.com/gin-gonic/gin"
+ 	"github.com/Cassandra-Labs-Foundation/core/internal/api/auth"
+ 	"github.com/Cassandra-Labs-Foundation/core/internal/api/middleware"
++	personApi "github.com/Cassandra-Labs-Foundation/core/internal/api/person"
++	"github.com/Cassandra-Labs-Foundation/core/internal/clients/supabase"
+ 	"github.com/Cassandra-Labs-Foundation/core/internal/config"
++	"github.com/Cassandra-Labs-Foundation/core/internal/repository"
+ 	authService "github.com/Cassandra-Labs-Foundation/core/internal/service/auth"
++	personService "github.com/Cassandra-Labs-Foundation/core/internal/service/person"
+ 	"github.com/Cassandra-Labs-Foundation/core/pkg/jwt"
+ )
+ 
+ func main() {
+-	// Load configuration
+-	cfg := config.Load()
++    // Load configuration
++    cfg := config.Load()
++    
++    // Create Supabase client
++    log.Printf("Connecting to Supabase at: %s", cfg.Supabase.URL)
++    supabaseClient := supabase.NewClient(cfg.Supabase.URL, cfg.Supabase.APIKey)
+ 	
+ 	// Create JWT service
+ 	jwtService := jwt.NewService(cfg.JWT.Secret, cfg.JWT.ExpiryMinutes)
+@@ -24,6 +32,11 @@ func main() {
+ 	// Create auth handler
+ 	authHandler := auth.NewHandler(authSvc)
+ 	
++	// Create person repository and service using REST API
++	personRepo := repository.NewPersonRestRepository(supabaseClient)
++	personSvc := personService.NewService(personRepo)
++	personHandler := personApi.NewHandler(personSvc)
++	
+ 	// Create gin router
+ 	r := gin.Default()
+ 	
+@@ -43,6 +56,15 @@ func main() {
+ 	{
+ 		protected.GET("/auth/validate", authHandler.ValidateToken)
+ 		
++		// Person entity routes
++		personRoutes := protected.Group("/entities/person")
++		{
++			personRoutes.POST("", personHandler.Create)
++			personRoutes.GET("", personHandler.List)
++			personRoutes.GET("/:id", personHandler.Get)
++			personRoutes.PATCH("/:id", personHandler.Update)
++		}
++		
+ 		// Add more protected routes here
+ 		protected.GET("/hello", func(c *gin.Context) {
+ 			userID, _ := c.Get("userID")
+diff --git a/development-notes.md b/development-notes.md
+index 3a345e8..53cd414 100644
+--- a/development-notes.md
++++ b/development-notes.md
+@@ -1,3 +1,14 @@
++## Mar 17th 2025
++
++- ok let's do this
++    - the first step is to break this down further
++        - ok done, it's now all time-boxed in my calendar
++
++- next step is to figure out where exactly I left off
++    - in a way, this is an opportunity to start over
++        - I'm not going to use SuperGrok just yet, but I will transitioning into explaining the project to GPT
++    - the next step here is to fit the documentation into o3
++
+ ## Feb 26th 2025
+ 
+ - the focus is on Supabase, let's get it working
+diff --git a/go.mod b/go.mod
+index 0e1af36..b9495c9 100644
+--- a/go.mod
++++ b/go.mod
+@@ -5,6 +5,8 @@ go 1.22.5
+ require (
+ 	github.com/gin-gonic/gin v1.9.1
+ 	github.com/golang-jwt/jwt/v4 v4.5.0
++	github.com/google/uuid v1.6.0
++	github.com/lib/pq v1.10.9
+ )
+ 
+ require (
+diff --git a/go.sum b/go.sum
+index d3e3ea3..46412d3 100644
+--- a/go.sum
++++ b/go.sum
+@@ -34,6 +34,8 @@ github.com/golang/protobuf v1.5.0/go.mod h1:FsONVRAS9T7sI+LIUmWTfcYkHO4aIWwzhcaS
+ github.com/google/go-cmp v0.5.5 h1:Khx7svrCpmxxtHBq5j2mp/xVjsi8hQMfNLvJFAlrGgU=
+ github.com/google/go-cmp v0.5.5/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
+ github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
++github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
++github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
+ github.com/json-iterator/go v1.1.12 h1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnrnM=
+ github.com/json-iterator/go v1.1.12/go.mod h1:e30LSqwooZae/UwlEbR2852Gd8hjQvJoHmT4TnhNGBo=
+ github.com/klauspost/cpuid/v2 v2.0.9/go.mod h1:FInQzS24/EEf25PyTYn52gqo7WaD8xa0213Md/qVLRg=
+@@ -42,6 +44,7 @@ github.com/klauspost/cpuid/v2 v2.2.6/go.mod h1:Lcz8mBdAVJIBVzewtcLocK12l3Y+JytZY
+ github.com/knz/go-libedit v1.10.1/go.mod h1:MZTVkCWyz0oBc7JOWP3wNAzd002ZbM/5hgShxwh4x8M=
+ github.com/leodido/go-urn v1.2.4 h1:XlAE/cm/ms7TE/VMVoduSpNBoyc2dOxHs5MZSwAN63Q=
+ github.com/leodido/go-urn v1.2.4/go.mod h1:7ZrI8mTSeBSHl/UaRyKQW1qZeMgak41ANeCNaVckg+4=
++github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
+ github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
+ github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
+ github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
+diff --git a/internal/config/config.go b/internal/config/config.go
+index f112565..55aa1f6 100644
+--- a/internal/config/config.go
++++ b/internal/config/config.go
+@@ -8,8 +8,10 @@ import (
+ 
+ // Config holds all configuration for the application
+ type Config struct {
+-	Server ServerConfig
+-	JWT    JWTConfig
++	Server   ServerConfig
++	JWT      JWTConfig
++	Database DatabaseConfig
++	Supabase SupabaseConfig
+ }
+ 
+ // ServerConfig holds server related configuration
+@@ -25,6 +27,22 @@ type JWTConfig struct {
+ 	ExpiryMinutes int
+ }
+ 
++// DatabaseConfig holds database related configuration
++type DatabaseConfig struct {
++	Host     string
++	Port     string
++	User     string
++	Password string
++	DBName   string
++	SSLMode  string
++}
++
++// SupabaseConfig holds Supabase related configuration
++type SupabaseConfig struct {
++	URL    string
++	APIKey string
++}
++
+ // Load returns configuration from environment variables
+ func Load() *Config {
+ 	return &Config{
+@@ -37,6 +55,18 @@ func Load() *Config {
+ 			Secret:       getEnv("JWT_SECRET", "your-secret-key"),
+ 			ExpiryMinutes: getEnvAsInt("JWT_EXPIRY_MINUTES", 60),
+ 		},
++		Database: DatabaseConfig{
++			Host:     getEnv("DB_HOST", "localhost"),
++			Port:     getEnv("DB_PORT", "5432"),
++			User:     getEnv("DB_USER", "postgres"),
++			Password: getEnv("DB_PASSWORD", "postgres"),
++			DBName:   getEnv("DB_NAME", "bankingcore"),
++			SSLMode:  getEnv("DB_SSLMODE", "disable"),
++		},
++		Supabase: SupabaseConfig{
++			URL:    getEnv("SUPABASE_URL", ""),
++			APIKey: getEnv("SUPABASE_API_KEY", ""),
++		},
+ 	}
+ }
+ 

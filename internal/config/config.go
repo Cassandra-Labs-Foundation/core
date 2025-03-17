@@ -8,8 +8,10 @@ import (
 
 // Config holds all configuration for the application
 type Config struct {
-	Server ServerConfig
-	JWT    JWTConfig
+	Server   ServerConfig
+	JWT      JWTConfig
+	Database DatabaseConfig
+	Supabase SupabaseConfig
 }
 
 // ServerConfig holds server related configuration
@@ -25,6 +27,22 @@ type JWTConfig struct {
 	ExpiryMinutes int
 }
 
+// DatabaseConfig holds database related configuration
+type DatabaseConfig struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	DBName   string
+	SSLMode  string
+}
+
+// SupabaseConfig holds Supabase related configuration
+type SupabaseConfig struct {
+	URL    string
+	APIKey string
+}
+
 // Load returns configuration from environment variables
 func Load() *Config {
 	return &Config{
@@ -36,6 +54,18 @@ func Load() *Config {
 		JWT: JWTConfig{
 			Secret:       getEnv("JWT_SECRET", "your-secret-key"),
 			ExpiryMinutes: getEnvAsInt("JWT_EXPIRY_MINUTES", 60),
+		},
+		Database: DatabaseConfig{
+			Host:     getEnv("DB_HOST", "localhost"),
+			Port:     getEnv("DB_PORT", "5432"),
+			User:     getEnv("DB_USER", "postgres"),
+			Password: getEnv("DB_PASSWORD", "postgres"),
+			DBName:   getEnv("DB_NAME", "bankingcore"),
+			SSLMode:  getEnv("DB_SSLMODE", "disable"),
+		},
+		Supabase: SupabaseConfig{
+			URL:    getEnv("SUPABASE_URL", ""),
+			APIKey: getEnv("SUPABASE_API_KEY", ""),
 		},
 	}
 }
