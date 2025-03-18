@@ -23,6 +23,37 @@
     - most thigns seem to be working, except for the updating the person entity with KYC status
         - the key turned out to be making the type on Supabase not just a Timestamp but also a Timezone
 
+- ok now that all the tests have passed, let's take some time properly document all of this
+    - `main` package contains `main.go` and it initializes the app, loads configs, sets up routes and runs the server
+        - Divided into authentication (/auth) and protected routes (/), which include Person entity routes.
+    - `internal` package is for code that used internally by the project
+        - `api` contains the endpoints for how the service interacts with externals
+            - `auth/handler.go`: Handles login, token refresh, and validation endpoints.
+            - `middleware/auth.go`: Implements a Gin middleware to validate JWT tokens.
+            - `person/handler.go`: Defines CRUD-like endpoints (POST, GET, PATCH, etc.) for Person entities.
+        - `service` holds business logic, core operations and validation rules
+            - `auth/service.go` is authentication logic (login, token refresh, token validation).
+            - `person/service.go` is person onboarding logic (e.g., validating input, parsing dates, setting default KYC status).
+        - `repository` is for interactions with external data sources
+            - `person.go` contains PersonEntity struct and the personRestRepository that talks to Supabase for CRUD operations.
+            - this is where we would put TigerBeetle interactions
+        - `config` manages config loading, env variables, and settings
+            - `config.go` loads environment variables into a Config struct.
+                - Defines server settings (port, timeouts), JWT settings, database config, and Supabase config.
+        - our `internal/clients` is where we have `supabase/client.go` I.E. the Supabase client to interact with the Supabase API
+        - our `internal/database` is where we connect with our PostGres DB
+    - `pkg` holds can code that can be reused outside of the project
+        - `jwt/jwt.go` handles JWT creation and validation (signing, parsing, verifying claims).
+    - `go.mod` and `go.sum` handle external packages and dependencies
+- client sends a request to the `api` endpoint which calls a method in `service` that validates/transforms the input to then call a `repository` method to persist the data 
+    - A client (e.g., auth-and-person-test.sh) sends a request to one of the endpoints (e.g., POST /api/v1/entities/person).
+    - The request goes through the Gin router (in main.go), which calls the appropriate handler function (in internal/api/person/handler.go).
+    - The handler validates and parses input, then calls the service layer (in internal/service/person/service.go).
+    - The service layer applies business logic (e.g., verifying data, setting defaults) and calls the repository (in internal/repository/person.go) to actually interact with Supabase.
+    - The repository uses the Supabase client (in internal/clients/supabase/client.go) to send HTTP requests to the Supabase REST API.
+    - The result is passed back up through the layers to the handler, which returns a response to the client.
+
+
 ## Feb 26th 2025
 
 - the focus is on Supabase, let's get it working
