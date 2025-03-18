@@ -6,41 +6,46 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/Cassandra-Labs-Foundation/core/internal/api/auth"
 	"github.com/Cassandra-Labs-Foundation/core/internal/api/middleware"
-	personApi "github.com/Cassandra-Labs-Foundation/core/internal/api/person"
 	"github.com/Cassandra-Labs-Foundation/core/internal/clients/supabase"
 	"github.com/Cassandra-Labs-Foundation/core/internal/config"
 	"github.com/Cassandra-Labs-Foundation/core/internal/repository"
 	authService "github.com/Cassandra-Labs-Foundation/core/internal/service/auth"
+	personApi "github.com/Cassandra-Labs-Foundation/core/internal/api/person"
 	personService "github.com/Cassandra-Labs-Foundation/core/internal/service/person"
+	businessApi "github.com/Cassandra-Labs-Foundation/core/internal/api/business"
+	businessService "github.com/Cassandra-Labs-Foundation/core/internal/service/business"
 	"github.com/Cassandra-Labs-Foundation/core/pkg/jwt"
 )
 
 func main() {
 	// Load .env file
-    if err := godotenv.Load(); err != nil {
-        log.Println("No .env file found, using system environment variables")
-    }
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using system environment variables")
+	}
 	
-    // Load configuration
-    cfg := config.Load()
-    
-    // Create Supabase client
-    log.Printf("Connecting to Supabase at: %s", cfg.Supabase.URL)
-    supabaseClient := supabase.NewClient(cfg.Supabase.URL, cfg.Supabase.APIKey)
+	// Load configuration
+	cfg := config.Load()
+	
+	// Create Supabase client
+	log.Printf("Connecting to Supabase at: %s", cfg.Supabase.URL)
+	supabaseClient := supabase.NewClient(cfg.Supabase.URL, cfg.Supabase.APIKey)
 	
 	// Create JWT service
 	jwtService := jwt.NewService(cfg.JWT.Secret, cfg.JWT.ExpiryMinutes)
 	
-	// Create auth service
+	// Create auth service and handler
 	authSvc := authService.NewService(jwtService)
-	
-	// Create auth handler
 	authHandler := auth.NewHandler(authSvc)
 	
-	// Create person repository and service using REST API
+	// Create person repository, service and handler using Supabase REST API
 	personRepo := repository.NewPersonRestRepository(supabaseClient)
 	personSvc := personService.NewService(personRepo)
 	personHandler := personApi.NewHandler(personSvc)
+	
+	// Create business repository, service and handler using Supabase REST API
+	businessRepo := repository.NewBusinessRestRepository(supabaseClient)
+	businessSvc := businessService.NewService(businessRepo)
+	businessHandler := businessApi.NewHandler(businessSvc)
 	
 	// Create gin router
 	r := gin.Default()
@@ -70,7 +75,16 @@ func main() {
 			personRoutes.PATCH("/:id", personHandler.Update)
 		}
 		
-		// Add more protected routes here
+		// Business entity routes
+		businessRoutes := protected.Group("/entities/business")
+		{
+			businessRoutes.POST("", businessHandler.Create)
+			businessRoutes.GET("", businessHandler.List)
+			businessRoutes.GET("/:id", businessHandler.Get)
+			businessRoutes.PATCH("/:id", businessHandler.Update)
+		}
+		
+		// Additional protected route example
 		protected.GET("/hello", func(c *gin.Context) {
 			userID, _ := c.Get("userID")
 			c.JSON(200, gin.H{

@@ -1,3 +1,15 @@
+## Mar 18th 2025
+
+- ok let's do this!
+    - I also should diagram the schema at the end
+
+- let's add Business entities
+    - we added `/api/business/handler.go` and `/service/business/service.go` and `/repository/business.go` 
+        - added routes to `main.go`
+    - now let's add business entities on Supabase
+        - done
+    - next step is to write a test 
+
 ## Mar 17th 2025
 
 - ok let's do this
