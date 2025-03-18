@@ -11,7 +11,7 @@ function pretty_json {
 
 # API base URL
 API_URL="http://localhost:8080/api/v1"
-echo "🚀 Testing Banking Core API (Business Endpoints) at $API_URL"
+echo "🚀 Testing Banking Core API (Business Endpoints with KYC) at $API_URL"
 echo "=================================================="
 
 # Step 1: Authentication
@@ -39,8 +39,8 @@ fi
 
 echo
 
-# Step 2: Create Business Entity
-echo "📝 Step 2: Creating a new business entity"
+# Step 2: Create Business Entity with additional KYC fields
+echo "📝 Step 2: Creating a new business entity with KYC details"
 echo "--------------------------------------------------"
 
 CREATE_RESULT=$(curl -s -X POST "$API_URL/entities/business" \
@@ -50,7 +50,9 @@ CREATE_RESULT=$(curl -s -X POST "$API_URL/entities/business" \
     "name": "Acme Corporation",
     "registration_number": "ACME-123456",
     "address": "456 Corporate Blvd",
-    "country": "US"
+    "country": "US",
+    "tax_id": "TAX-7890",
+    "kyc_document_url": "http://example.com/business-doc.pdf"
   }')
 
 # Extract business ID
@@ -68,7 +70,7 @@ fi
 
 echo
 
-# Step 3: Get Business Entity
+# Step 3: Retrieve Business Entity
 echo "📝 Step 3: Retrieving the created business entity"
 echo "--------------------------------------------------"
 
@@ -86,7 +88,7 @@ fi
 
 echo
 
-# Step 4: Update Business Entity (e.g., update KYC status)
+# Step 4: Update Business Entity (update KYC status to verified)
 echo "📝 Step 4: Updating the business entity with verified KYC status"
 echo "--------------------------------------------------"
 

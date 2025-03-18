@@ -19,8 +19,12 @@ type BusinessEntity struct {
 	RegistrationNumber string     `json:"registration_number"`
 	Address            string     `json:"address"`
 	Country            string     `json:"country"`
+	// Existing KYC fields:
 	KYCStatus          string     `json:"kyc_status,omitempty"`
 	KYCVerifiedAt      *time.Time `json:"kyc_verified_at,omitempty"`
+	// New KYC fields:
+	TaxID              *string    `json:"tax_id,omitempty"`
+	KYCDocumentURL     *string    `json:"kyc_document_url,omitempty"`
 	CreatedAt          time.Time  `json:"created_at,omitempty"`
 	UpdatedAt          time.Time  `json:"updated_at,omitempty"`
 }

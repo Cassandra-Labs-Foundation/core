@@ -14,6 +14,50 @@
 - next step is KYC verification 
     - ok so we added `government_id`, `nationality`, and `kyc_document_url`
 
+### Person Entity Schema
+
+| Field                | Type        | Nullable | Description                                                |
+|----------------------|-------------|----------|------------------------------------------------------------|
+| **id**               | uuid        | No       | Primary key, auto-generated (default: `gen_random_uuid()`) |
+| **first_name**       | text        | No       | First name of the person                                   |
+| **last_name**        | text        | No       | Last name of the person                                    |
+| **date_of_birth**    | date        | No       | Date of birth in `YYYY-MM-DD` format                       |
+| **ssn**              | text        | Yes      | Social Security Number (optional)                          |
+| **email**            | text        | Yes      | Email address (optional)                                   |
+| **phone_number**     | text        | Yes      | Contact phone number (optional)                            |
+| **street1**          | text        | Yes      | Primary street address (optional)                          |
+| **street2**          | text        | Yes      | Secondary street address (optional)                        |
+| **city**             | text        | Yes      | City of residence (optional)                               |
+| **state**            | text        | Yes      | State or province (optional)                               |
+| **postal_code**      | text        | Yes      | ZIP or postal code (optional)                              |
+| **country**          | text        | Yes      | Country name or code (optional)                            |
+| **kyc_status**       | text        | No       | KYC status (default: `"pending"`)                          |
+| **kyc_verified_at**  | timestamptz | Yes      | Timestamp when KYC was verified (optional)                 |
+| **government_id**    | text        | Yes      | Government-issued ID number (optional)                     |
+| **nationality**      | text        | Yes      | Nationality of the person (optional)                       |
+| **kyc_document_url** | text        | Yes      | URL for the uploaded KYC document (optional)               |
+| **created_at**       | timestamptz | No       | Record creation timestamp                                  |
+| **updated_at**       | timestamptz | No       | Record last update timestamp                               |
+
+
+### Business Entity Schema
+
+| Field                 | Type        | Nullable | Description                                                |
+|-----------------------|-------------|----------|------------------------------------------------------------|
+| **id**                | uuid        | No       | Primary key, auto-generated (default: `gen_random_uuid()`) |
+| **name**              | text        | No       | Business name                                              |
+| **registration_number** | text     | No       | Unique registration number of the business                 |
+| **address**           | text        | No       | Business address                                           |
+| **country**           | text        | No       | Country where the business is registered                   |
+| **kyc_status**        | text        | No       | KYC status (default: `"pending"`)                          |
+| **kyc_verified_at**   | timestamptz | Yes      | Timestamp when KYC was verified (optional)                 |
+| **tax_id**            | text        | Yes      | Tax identification number (optional)                     |
+| **kyc_document_url**  | text        | Yes      | URL for the uploaded KYC document (optional)               |
+| **created_at**        | timestamptz | No       | Record creation timestamp                                  |
+| **updated_at**        | timestamptz | No       | Record last update timestamp                               |
+
+
+
 ## Mar 17th 2025
 
 - ok let's do this

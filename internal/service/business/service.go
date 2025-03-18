@@ -21,19 +21,27 @@ type Service interface {
 	List(ctx context.Context, limit, offset int) ([]*BusinessOutput, error)
 }
 
+// CreateBusinessInput represents the input for creating a business
 type CreateBusinessInput struct {
 	Name               string `json:"name" binding:"required"`
 	RegistrationNumber string `json:"registration_number" binding:"required"`
 	Address            string `json:"address" binding:"required"`
 	Country            string `json:"country" binding:"required"`
+	// New optional KYC fields:
+	TaxID              *string `json:"tax_id"`
+	KYCDocumentURL     *string `json:"kyc_document_url"`
 }
 
+// UpdateBusinessInput represents the input for updating a business
 type UpdateBusinessInput struct {
 	Name               *string `json:"name"`
 	RegistrationNumber *string `json:"registration_number"`
 	Address            *string `json:"address"`
 	Country            *string `json:"country"`
 	KYCStatus          *string `json:"kyc_status"`
+	// New optional KYC fields:
+	TaxID              *string `json:"tax_id"`
+	KYCDocumentURL     *string `json:"kyc_document_url"`
 }
 
 type BusinessOutput struct {
