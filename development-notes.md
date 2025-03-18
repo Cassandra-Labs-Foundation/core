@@ -56,7 +56,21 @@
 | **created_at**        | timestamptz | No       | Record creation timestamp                                  |
 | **updated_at**        | timestamptz | No       | Record last update timestamp                               |
 
+- Next step is the Tiger Beetle Integration 
+    - first, we create a tiger beetle client 
+        - remember the flow: api --> service --> repo --> client
+            - "Always Send Requests Clearly"
+    - we need to update an actual TB endpoint in `main.go`
+        - right now it's using a localhost
+    - we created a `mock_server.go` that creates a TB Mock Server for internal testing
+        - o3 suggests this is a good idea, but I worry that we'll be building without knowing what the actual production environment is like
+        - had to move it under `cmd/mock-tigerbeetle` to avoid package conflicts
+    - ok the test passes
 
+- [ ] Persons and Businesses should also have a field that helps us track the fintechs
+    - [ ] Fintech parnters need their own entry in the DB to track
+- [ ] save the TB tx into Supabase as well
+- [ ] create a way for the fintech partners to test this themselves 
 
 ## Mar 17th 2025
 

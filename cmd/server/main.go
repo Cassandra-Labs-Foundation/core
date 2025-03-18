@@ -7,6 +7,7 @@ import (
 	"github.com/Cassandra-Labs-Foundation/core/internal/api/auth"
 	"github.com/Cassandra-Labs-Foundation/core/internal/api/middleware"
 	"github.com/Cassandra-Labs-Foundation/core/internal/clients/supabase"
+	"github.com/Cassandra-Labs-Foundation/core/internal/clients/tigerbeetle"
 	"github.com/Cassandra-Labs-Foundation/core/internal/config"
 	"github.com/Cassandra-Labs-Foundation/core/internal/repository"
 	authService "github.com/Cassandra-Labs-Foundation/core/internal/service/auth"
@@ -14,6 +15,8 @@ import (
 	personService "github.com/Cassandra-Labs-Foundation/core/internal/service/person"
 	businessApi "github.com/Cassandra-Labs-Foundation/core/internal/api/business"
 	businessService "github.com/Cassandra-Labs-Foundation/core/internal/service/business"
+	ledgerApi "github.com/Cassandra-Labs-Foundation/core/internal/api/ledger"
+	ledgerService "github.com/Cassandra-Labs-Foundation/core/internal/service/ledger"
 	"github.com/Cassandra-Labs-Foundation/core/pkg/jwt"
 )
 
@@ -46,6 +49,15 @@ func main() {
 	businessRepo := repository.NewBusinessRestRepository(supabaseClient)
 	businessSvc := businessService.NewService(businessRepo)
 	businessHandler := businessApi.NewHandler(businessSvc)
+
+	// Create TigerBeetle client (you'll need an endpoint; this is a stub/example)
+	tbClient := tigerbeetle.NewClient("http://localhost:9000")
+
+
+    // Create ledger repository and service
+    ledgerRepo := repository.NewLedgerRepository(tbClient)
+    ledgerSvc := ledgerService.NewService(ledgerRepo)
+    ledgerHandler := ledgerApi.NewHandler(ledgerSvc)
 	
 	// Create gin router
 	r := gin.Default()
@@ -84,6 +96,13 @@ func main() {
 			businessRoutes.PATCH("/:id", businessHandler.Update)
 		}
 		
+		// Ledger routes (TigerBeetle)
+		ledgerRoutes := protected.Group("/ledger")
+		{
+			ledgerRoutes.POST("/account", ledgerHandler.CreateAccountHandler)
+			ledgerRoutes.POST("/transfer", ledgerHandler.TransferHandler)
+		}
+	
 		// Additional protected route example
 		protected.GET("/hello", func(c *gin.Context) {
 			userID, _ := c.Get("userID")
@@ -92,7 +111,7 @@ func main() {
 				"userID":  userID,
 			})
 		})
-	}
+	}	
 	
 	// Start the server
 	log.Printf("Starting server on port %s...\n", cfg.Server.Port)
