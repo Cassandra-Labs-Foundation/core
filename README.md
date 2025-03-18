@@ -11,11 +11,11 @@ We use this README as a living document to track progress and invite contributio
 - **Authentication Module**
   - [x] Decide between OAuth 2.0 vs. Bearer key-based authentication.
   - [x] Implement authentication middleware.
-  - [ ] Create endpoints for token issuance, validation, and refresh.
+  - [x] Create endpoints for token issuance, validation, and refresh.
 
 - **Entity Onboarding & KYC**
   - [ ] Design dedicated endpoints for:
-    - [ ] Person (`POST /entities/person`, `PATCH /entities/person`)
+    - [x] Person (`POST /entities/person`, `PATCH /entities/person`)
     - [ ] Business (`POST /entities/business`, `PATCH /entities/business`)
   - [ ] Integrate detailed KYC fields (SSN, DOB, address) and support document uploads.
   - [ ] Implement validation and verification workflows.
