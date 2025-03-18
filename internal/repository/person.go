@@ -13,24 +13,29 @@ import (
 )
 
 // PersonEntity represents a person entity in the database
+// PersonEntity represents a person entity in the database
 type PersonEntity struct {
-	ID            uuid.UUID  `json:"id,omitempty"`
-	FirstName     string     `json:"first_name"`
-	LastName      string     `json:"last_name"`
-	DateOfBirth   time.Time  `json:"date_of_birth"`
-	SSN           *string    `json:"ssn,omitempty"`
-	Email         *string    `json:"email,omitempty"`
-	PhoneNumber   *string    `json:"phone_number,omitempty"`
-	Street1       *string    `json:"street1,omitempty"`
-	Street2       *string    `json:"street2,omitempty"`
-	City          *string    `json:"city,omitempty"`
-	State         *string    `json:"state,omitempty"`
-	PostalCode    *string    `json:"postal_code,omitempty"`
-	Country       *string    `json:"country,omitempty"`
-	KYCStatus     string     `json:"kyc_status,omitempty"`
-	KYCVerifiedAt *time.Time `json:"kyc_verified_at,omitempty"`
-	CreatedAt     time.Time  `json:"created_at,omitempty"`
-	UpdatedAt     time.Time  `json:"updated_at,omitempty"`
+	ID              uuid.UUID  `json:"id,omitempty"`
+	FirstName       string     `json:"first_name"`
+	LastName        string     `json:"last_name"`
+	DateOfBirth     time.Time  `json:"date_of_birth"`
+	SSN             *string    `json:"ssn,omitempty"`
+	Email           *string    `json:"email,omitempty"`
+	PhoneNumber     *string    `json:"phone_number,omitempty"`
+	Street1         *string    `json:"street1,omitempty"`
+	Street2         *string    `json:"street2,omitempty"`
+	City            *string    `json:"city,omitempty"`
+	State           *string    `json:"state,omitempty"`
+	PostalCode      *string    `json:"postal_code,omitempty"`
+	Country         *string    `json:"country,omitempty"`
+	KYCStatus       string     `json:"kyc_status,omitempty"`
+	KYCVerifiedAt   *time.Time `json:"kyc_verified_at,omitempty"`
+	// New KYC fields:
+	GovernmentID    *string    `json:"government_id,omitempty"`
+	Nationality     *string    `json:"nationality,omitempty"`
+	KYCDocumentURL  *string    `json:"kyc_document_url,omitempty"`
+	CreatedAt       time.Time  `json:"created_at,omitempty"`
+	UpdatedAt       time.Time  `json:"updated_at,omitempty"`
 }
 
 // PersonRepository provides methods to interact with person entities in the database

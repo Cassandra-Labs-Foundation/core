@@ -24,35 +24,43 @@ type Service interface {
 
 // CreatePersonInput represents the input for creating a person
 type CreatePersonInput struct {
-	FirstName   string  `json:"first_name" binding:"required"`
-	LastName    string  `json:"last_name" binding:"required"`
-	DateOfBirth string  `json:"date_of_birth" binding:"required"` // Format: YYYY-MM-DD
-	SSN         *string `json:"ssn"`
-	Email       *string `json:"email"`
-	PhoneNumber *string `json:"phone_number"`
-	Street1     *string `json:"street1"`
-	Street2     *string `json:"street2"`
-	City        *string `json:"city"`
-	State       *string `json:"state"`
-	PostalCode  *string `json:"postal_code"`
-	Country     *string `json:"country"`
+	FirstName      string  `json:"first_name" binding:"required"`
+	LastName       string  `json:"last_name" binding:"required"`
+	DateOfBirth    string  `json:"date_of_birth" binding:"required"` // Format: YYYY-MM-DD
+	SSN            *string `json:"ssn"`
+	Email          *string `json:"email"`
+	PhoneNumber    *string `json:"phone_number"`
+	Street1        *string `json:"street1"`
+	Street2        *string `json:"street2"`
+	City           *string `json:"city"`
+	State          *string `json:"state"`
+	PostalCode     *string `json:"postal_code"`
+	Country        *string `json:"country"`
+	// New optional KYC fields:
+	GovernmentID   *string `json:"government_id"`
+	Nationality    *string `json:"nationality"`
+	KYCDocumentURL *string `json:"kyc_document_url"`
 }
 
 // UpdatePersonInput represents the input for updating a person
 type UpdatePersonInput struct {
-	FirstName   *string `json:"first_name"`
-	LastName    *string `json:"last_name"`
-	DateOfBirth *string `json:"date_of_birth"` // Format: YYYY-MM-DD
-	SSN         *string `json:"ssn"`
-	Email       *string `json:"email"`
-	PhoneNumber *string `json:"phone_number"`
-	Street1     *string `json:"street1"`
-	Street2     *string `json:"street2"`
-	City        *string `json:"city"`
-	State       *string `json:"state"`
-	PostalCode  *string `json:"postal_code"`
-	Country     *string `json:"country"`
-	KYCStatus   *string `json:"kyc_status"`
+	FirstName      *string `json:"first_name"`
+	LastName       *string `json:"last_name"`
+	DateOfBirth    *string `json:"date_of_birth"` // Format: YYYY-MM-DD
+	SSN            *string `json:"ssn"`
+	Email          *string `json:"email"`
+	PhoneNumber    *string `json:"phone_number"`
+	Street1        *string `json:"street1"`
+	Street2        *string `json:"street2"`
+	City           *string `json:"city"`
+	State          *string `json:"state"`
+	PostalCode     *string `json:"postal_code"`
+	Country        *string `json:"country"`
+	KYCStatus      *string `json:"kyc_status"`
+	// New optional KYC fields:
+	GovernmentID   *string `json:"government_id"`
+	Nationality    *string `json:"nationality"`
+	KYCDocumentURL *string `json:"kyc_document_url"`
 }
 
 // PersonOutput represents the output for person entity operations
@@ -95,29 +103,31 @@ func (s *service) Create(ctx context.Context, input CreatePersonInput) (*PersonO
 		return nil, ErrInvalidPerson
 	}
 
-	// Create person entity
+	// Create person entity with new KYC fields
 	person := &repository.PersonEntity{
-		FirstName:   input.FirstName,
-		LastName:    input.LastName,
-		DateOfBirth: dob,
-		SSN:         input.SSN,
-		Email:       input.Email,
-		PhoneNumber: input.PhoneNumber,
-		Street1:     input.Street1,
-		Street2:     input.Street2,
-		City:        input.City,
-		State:       input.State,
-		PostalCode:  input.PostalCode,
-		Country:     input.Country,
-		KYCStatus:   "pending", // Default KYC status
+		FirstName:       input.FirstName,
+		LastName:        input.LastName,
+		DateOfBirth:     dob,
+		SSN:             input.SSN,
+		Email:           input.Email,
+		PhoneNumber:     input.PhoneNumber,
+		Street1:         input.Street1,
+		Street2:         input.Street2,
+		City:            input.City,
+		State:           input.State,
+		PostalCode:      input.PostalCode,
+		Country:         input.Country,
+		KYCStatus:       "pending", // Default KYC status
+		// New fields:
+		GovernmentID:    input.GovernmentID,
+		Nationality:     input.Nationality,
+		KYCDocumentURL:  input.KYCDocumentURL,
 	}
 
-	// Save to database
 	if err := s.personRepo.Create(ctx, person); err != nil {
 		return nil, err
 	}
 
-	// Convert to output format
 	return s.entityToOutput(person), nil
 }
 
@@ -235,22 +245,27 @@ func (s *service) List(ctx context.Context, limit, offset int) ([]*PersonOutput,
 // Helper function to convert entity to output
 func (s *service) entityToOutput(entity *repository.PersonEntity) *PersonOutput {
 	return &PersonOutput{
-		ID:            entity.ID,
-		FirstName:     entity.FirstName,
-		LastName:      entity.LastName,
-		DateOfBirth:   entity.DateOfBirth.Format("2006-01-02"),
-		SSN:           entity.SSN,
-		Email:         entity.Email,
-		PhoneNumber:   entity.PhoneNumber,
-		Street1:       entity.Street1,
-		Street2:       entity.Street2,
-		City:          entity.City,
-		State:         entity.State,
-		PostalCode:    entity.PostalCode,
-		Country:       entity.Country,
-		KYCStatus:     entity.KYCStatus,
-		KYCVerifiedAt: entity.KYCVerifiedAt,
-		CreatedAt:     entity.CreatedAt,
-		UpdatedAt:     entity.UpdatedAt,
+		ID:             entity.ID,
+		FirstName:      entity.FirstName,
+		LastName:       entity.LastName,
+		DateOfBirth:    entity.DateOfBirth.Format("2006-01-02"),
+		SSN:            entity.SSN,
+		Email:          entity.Email,
+		PhoneNumber:    entity.PhoneNumber,
+		Street1:        entity.Street1,
+		Street2:        entity.Street2,
+		City:           entity.City,
+		State:          entity.State,
+		PostalCode:     entity.PostalCode,
+		Country:        entity.Country,
+		KYCStatus:      entity.KYCStatus,
+		KYCVerifiedAt:  entity.KYCVerifiedAt,
+		// New fields:
+		// (Assuming you add these to PersonOutput as well)
+		// GovernmentID:    entity.GovernmentID,
+		// Nationality:     entity.Nationality,
+		// KYCDocumentURL:  entity.KYCDocumentURL,
+		CreatedAt:      entity.CreatedAt,
+		UpdatedAt:      entity.UpdatedAt,
 	}
 }

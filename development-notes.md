@@ -9,6 +9,10 @@
     - now let's add business entities on Supabase
         - done
     - next step is to write a test 
+        - `auth-and-business.sh` passes
+
+- next step is KYC verification 
+    - ok so we added `government_id`, `nationality`, and `kyc_document_url`
 
 ## Mar 17th 2025
 
