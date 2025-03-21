@@ -1,3 +1,26 @@
+## Mar 21st 2025
+
+- ok let's do this! 
+    - first pomodoro is about context loading...where did I leave off? 
+    - here is the summary from GPT
+        - we built Person and Business endpoints, alongside CRUD operations
+        - we created a stub TigerBeetle client with methods to create accounts and transfer funds
+            - we created a ledger Repository and Service to wrap the TB client
+            - `cmd/mock-tigerbeetle` simulates the mock server
+    - Always Send Requests Clearly
+        - API accepts requests,
+        - Service processes them,
+        - Repository requests data operations,
+        - Client communicates with external systems.
+
+- my goal is to visualize the TB ledger so that the fintechs can test the API 
+    - implement the ledger API 
+    - miminimal dashboard 
+
+- ok so we are trying to host TB on GCP so that we can actually mimick the API calls
+    - we dropped Docker because it wasn't working, whereas raw TB worked 
+    - now it's just a manner of using the external IP of the instance in our Go code locally
+
 ## Mar 18th 2025
 
 - ok let's do this!
