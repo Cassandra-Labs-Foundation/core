@@ -21,6 +21,7 @@
     - we dropped Docker because it wasn't working, whereas raw TB worked 
     - now it's just a manner of using the external IP of the instance in our Go code locally
 
+
 ## Mar 18th 2025
 
 - ok let's do this!
