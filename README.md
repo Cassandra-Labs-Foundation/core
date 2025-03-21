@@ -14,10 +14,10 @@ We use this README as a living document to track progress and invite contributio
   - [x] Create endpoints for token issuance, validation, and refresh.
 
 - **Entity Onboarding & KYC**
-  - [ ] Design dedicated endpoints for:
+  - [x] Design dedicated endpoints for:
     - [x] Person (`POST /entities/person`, `PATCH /entities/person`)
-    - [ ] Business (`POST /entities/business`, `PATCH /entities/business`)
-  - [ ] Integrate detailed KYC fields (SSN, DOB, address) and support document uploads.
+    - [x] Business (`POST /entities/business`, `PATCH /entities/business`)
+  - [x] Integrate detailed KYC fields (SSN, DOB, address) and support document uploads.
   - [ ] Implement validation and verification workflows.
 
 - **Account Management**
