@@ -1,3 +1,15 @@
+## Mar 22nd 2025
+
+- ok let's do this
+    - We dropped using Docker to run TigerBeetle on GCP in favor of using the raw binaries as per their documentation 
+        - it now runs on locahost which is accessible through the external IP
+    - we now use the TigerBeetle Go API directly in our local repo 
+    - we wrote a test that attempts to create two accounts and perform a transfer 
+
+- apparently the issue is that the TigerBeetle GO client doesn't play well with my Mac...
+    - this is kind of insane
+    - I opened [an issue on the TigerBeetle repo](https://github.com/tigerbeetle/tigerbeetle/issues/2842)
+
 ## Mar 21st 2025
 
 - ok let's do this! 
