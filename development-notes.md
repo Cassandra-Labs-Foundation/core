@@ -1,3 +1,20 @@
+## Mar 25th 2025
+
+- ok let's do this
+    - the first pomodoro is just to load the context 
+
+- let's figure out what the problem is with TigerBeetle
+    - bc if I can't even run it locally, I question it as a developer environment....
+    - props to Claude for figure out the issue after reading the TigerBeetle repsonse on the Issue
+        - "The issue is exactly what matklad identified in the GitHub comments: you're running the x86_64 (Intel) version of Go on your Apple M2 (ARM64/aarch64) machine, which is causing compatibility problems."
+        - "When you run x86_64 applications on Apple Silicon (M1/M2) Macs, they get executed through Rosetta 2, Apple's translation layer. However, Rosetta doesn't support all the advanced CPU instructions that TigerBeetle's native libraries might be using, which is causing the SIGILL: illegal instruction error." 
+    - this issue persists even when I try to re-install it with Homebrew, so I may need to download go from source
+        - the key turned out to be adding it to `.zshrc`
+
+- ok time to test the TigerBeetle go client now
+    - firs step is to active the VM on GCP
+
+
 ## Mar 22nd 2025
 
 - ok let's do this
