@@ -14,6 +14,28 @@
 - ok time to test the TigerBeetle go client now
     - firs step is to active the VM on GCP
 
+- ok now let's see if we can turn this into a sandbox
+    - [ ] Deploy Go API on a server
+        - Claude reccomends starting off deployin on the same VM where TigerBeetle is running so that we dont' have to deal with network config
+        - all I gotta do is download the repo into the VM 
+            - but I'm running into Github auth issues...predictable
+            - let's try setting up a Personal Access Token
+                - had to setup a classic one because the repo is private within the Cassandra Labs org
+        - 
+    - [ ] Configure CORS 
+        - [ ] Go server needs to connect to TigerBeetle server
+        - [ ] Go server needs to connect to Supabase
+    - [ ] API credentials for fintech partners
+    - [ ] Logging 
+    - [ ] Account Listing
+    - [ ] Account Retrieval
+    - [ ] Account Creation
+    - [ ] Transaction History
+    - [ ] Transfers between Accounts
+    - [ ] Deposits
+    - [ ] Withdrawals
+    - [ ] Idempotency
+
 
 ## Mar 22nd 2025
 

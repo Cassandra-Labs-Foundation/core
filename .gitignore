@@ -9,6 +9,5 @@ target/
 *.pdb
 
 *.pem
-*tigerbeetle
 tigerbeetle.zip
 .env
