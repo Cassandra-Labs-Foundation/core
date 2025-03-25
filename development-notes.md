@@ -21,7 +21,8 @@
             - but I'm running into Github auth issues...predictable
             - let's try setting up a Personal Access Token
                 - had to setup a classic one because the repo is private within the Cassandra Labs org
-        - 
+        - interesting, Claude is reccomending I setup "systemd service" so that the banking core runs automatically when the VM bootsup
+        - next let's update the firewall rules to allow external port access `sudo ufw allow 8080/tcp`
     - [ ] Configure CORS 
         - [ ] Go server needs to connect to TigerBeetle server
         - [ ] Go server needs to connect to Supabase
