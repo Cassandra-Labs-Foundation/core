@@ -1,3 +1,7 @@
+## Apr 8th 2025
+
+- Simply testing whether the scoreboard pulls the commit history
+
 ## Mar 25th 2025
 
 - ok let's do this
